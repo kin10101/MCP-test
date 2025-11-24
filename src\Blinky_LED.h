@@ -4,8 +4,6 @@
 
 /* Function Declarations - from C file content */
 void initLED(void);
-void blinkLED(unsigned int ms);
-void blinkChar(char c);
-void blinkMessage(const char *msg);
+void blinkLED(void);
 
 #endif /* BLINKY_LED_H */
