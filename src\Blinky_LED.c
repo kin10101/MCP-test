@@ -15,16 +15,12 @@
 /* Function Implementations - from Functions[] */
 void initLED(void)
 {
-    /* Configure LED pin as push-pull output and set to high (LED off if low-active) */
     IfxPort_setPinModeOutput(LED, IfxPort_OutputMode_pushPull, IfxPort_OutputIdx_general);
     IfxPort_setPinHigh(LED);
 }
 
 void blinkLED(void)
 {
-    /* Toggle LED state */
     IfxPort_togglePin(LED);
-
-    /* Wait for WAIT_TIME milliseconds */
     waitTime(IfxStm_getTicksFromMilliseconds(BSP_DEFAULT_TIMER, WAIT_TIME));
 }

@@ -11,18 +11,18 @@ IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 void core0_main(void) {
     /* Standard initialization from Dependencies[] */
     IfxCpu_enableInterrupts();
-    
+
     /* Disable watchdogs */
     IfxScuWdt_disableCpuWatchdog(IfxScuWdt_getCpuWatchdogPassword());
     IfxScuWdt_disableSafetyWatchdog(IfxScuWdt_getSafetyWatchdogPassword());
-    
+
     /* CPU synchronization */
     IfxCpu_emitEvent(&g_cpuSyncEvent);
     IfxCpu_waitEvent(&g_cpuSyncEvent, 1);
-    
-    /* Project initialization */
+
+    /* Initialize LED */
     initLED();
-    
+
     /* Infinite loop */
     while(1) {
         blinkLED();
