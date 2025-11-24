@@ -9,7 +9,7 @@ IFX_ALIGN(4) IfxCpu_syncEvent g_cpuSyncEvent = 0;
 
 /* Main Function - from Functions[] where name contains "main" */
 void core0_main(void) {
-    /* Standard initialization from Dependencies[] */
+    /* Standard initialization */
     IfxCpu_enableInterrupts();
 
     /* Disable watchdogs */
@@ -20,7 +20,7 @@ void core0_main(void) {
     IfxCpu_emitEvent(&g_cpuSyncEvent);
     IfxCpu_waitEvent(&g_cpuSyncEvent, 1);
 
-    /* Initialize LED */
+    /* Project-specific initialization */
     initLED();
 
     /* Infinite loop */

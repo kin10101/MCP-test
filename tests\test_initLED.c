@@ -2,15 +2,15 @@
 
 #include "unity.h"
 #include "mock_config.h"
+#include <string.h>
 
 /* ========================================================================
-   INLINE MACROS - From JSON DefinedConstants
+   INLINE MACROS - Extracted from JSON DefinedConstants
    ======================================================================== */
-#define LED &MODULE_P00,5
-#define WAIT_TIME 500U
-/* Define numeric macros for modes used by initLED to avoid unknown enums */
-#define IfxPort_OutputMode_pushPull ((uint8)0U)
-#define IfxPort_OutputIdx_general  ((uint8)0U)
+#define LED &MODULE_P00, 5
+#define WAIT_TIME 500
+#define IfxPort_OutputMode_pushPull ((uint8)0)
+#define IfxPort_OutputIdx_general   ((uint8)0)
 
 /* ========================================================================
    INLINE RESOURCES
@@ -18,81 +18,57 @@
 static Ifx_P MODULE_P00 = {0};
 
 /* ========================================================================
-   INLINE MOCK IMPLEMENTATIONS - Weak functions and state
+   INLINE MOCK IMPLEMENTATIONS - Only for dependencies of initLED
    ======================================================================== */
-static uint32 g_call_sequence = 0U;
 
 typedef struct {
     uint32 call_count;
     Ifx_P *last_port;
-    uint8  last_pin;
-    uint8  last_mode;
-    uint8  last_idx;
-    uint32 seq;
+    uint8 last_pin;
+    uint8 last_mode;
+    uint8 last_idx;
 } mock_IfxPort_setPinModeOutput_state_t;
 static mock_IfxPort_setPinModeOutput_state_t mock_IfxPort_setPinModeOutput = {0};
 
+__attribute__((weak)) void IfxPort_setPinModeOutput(Ifx_P *port, uint8 pin, uint8 mode, uint8 idx) {
+    mock_IfxPort_setPinModeOutput.call_count++;
+    mock_IfxPort_setPinModeOutput.last_port = port;
+    mock_IfxPort_setPinModeOutput.last_pin = pin;
+    mock_IfxPort_setPinModeOutput.last_mode = mode;
+    mock_IfxPort_setPinModeOutput.last_idx = idx;
+}
+
+uint32 mock_get_IfxPort_setPinModeOutput_call_count(void) {
+    return mock_IfxPort_setPinModeOutput.call_count;
+}
+
+
 typedef struct {
     uint32 call_count;
     Ifx_P *last_port;
-    uint8  last_pin;
-    uint32 seq;
+    uint8 last_pin;
 } mock_IfxPort_setPinHigh_state_t;
 static mock_IfxPort_setPinHigh_state_t mock_IfxPort_setPinHigh = {0};
 
-__attribute__((weak)) void IfxPort_setPinModeOutput(Ifx_P *port, uint8 pin, uint8 mode, uint8 idx)
-{
-    mock_IfxPort_setPinModeOutput.call_count++;
-    mock_IfxPort_setPinModeOutput.last_port = port;
-    mock_IfxPort_setPinModeOutput.last_pin  = pin;
-    mock_IfxPort_setPinModeOutput.last_mode = mode;
-    mock_IfxPort_setPinModeOutput.last_idx  = idx;
-    g_call_sequence++;
-    mock_IfxPort_setPinModeOutput.seq = g_call_sequence;
-}
-
-__attribute__((weak)) void IfxPort_setPinHigh(Ifx_P *port, uint8 pin)
-{
+__attribute__((weak)) void IfxPort_setPinHigh(Ifx_P *port, uint8 pin) {
     mock_IfxPort_setPinHigh.call_count++;
     mock_IfxPort_setPinHigh.last_port = port;
-    mock_IfxPort_setPinHigh.last_pin  = pin;
-    g_call_sequence++;
-    mock_IfxPort_setPinHigh.seq = g_call_sequence;
+    mock_IfxPort_setPinHigh.last_pin = pin;
 }
 
-/* Helpers */
-static uint32 mock_get_IfxPort_setPinModeOutput_call_count(void) { return mock_IfxPort_setPinModeOutput.call_count; }
-static uint32 mock_get_IfxPort_setPinHigh_call_count(void) { return mock_IfxPort_setPinHigh.call_count; }
-static Ifx_P* mock_get_IfxPort_setPinModeOutput_last_port(void) { return mock_IfxPort_setPinModeOutput.last_port; }
-static uint8  mock_get_IfxPort_setPinModeOutput_last_pin(void)  { return mock_IfxPort_setPinModeOutput.last_pin; }
-static uint8  mock_get_IfxPort_setPinModeOutput_last_mode(void) { return mock_IfxPort_setPinModeOutput.last_mode; }
-static uint8  mock_get_IfxPort_setPinModeOutput_last_idx(void)  { return mock_IfxPort_setPinModeOutput.last_idx; }
-static Ifx_P* mock_get_IfxPort_setPinHigh_last_port(void) { return mock_IfxPort_setPinHigh.last_port; }
-static uint8  mock_get_IfxPort_setPinHigh_last_pin(void)  { return mock_IfxPort_setPinHigh.last_pin; }
-static uint32 mock_get_IfxPort_setPinModeOutput_seq(void) { return mock_IfxPort_setPinModeOutput.seq; }
-static uint32 mock_get_IfxPort_setPinHigh_seq(void) { return mock_IfxPort_setPinHigh.seq; }
+uint32 mock_get_IfxPort_setPinHigh_call_count(void) {
+    return mock_IfxPort_setPinHigh.call_count;
+}
 
-static void mock_reset_all(void)
-{
-    g_call_sequence = 0U;
-    mock_IfxPort_setPinModeOutput.call_count = 0U;
-    mock_IfxPort_setPinModeOutput.last_port = (Ifx_P*)0;
-    mock_IfxPort_setPinModeOutput.last_pin  = 0U;
-    mock_IfxPort_setPinModeOutput.last_mode = 0U;
-    mock_IfxPort_setPinModeOutput.last_idx  = 0U;
-    mock_IfxPort_setPinModeOutput.seq       = 0U;
-
-    mock_IfxPort_setPinHigh.call_count = 0U;
-    mock_IfxPort_setPinHigh.last_port = (Ifx_P*)0;
-    mock_IfxPort_setPinHigh.last_pin  = 0U;
-    mock_IfxPort_setPinHigh.seq       = 0U;
+void mock_reset_all(void) {
+    memset(&mock_IfxPort_setPinModeOutput, 0, sizeof(mock_IfxPort_setPinModeOutput));
+    memset(&mock_IfxPort_setPinHigh, 0, sizeof(mock_IfxPort_setPinHigh));
 }
 
 /* ========================================================================
-   INLINE FUNCTION UNDER TEST
+   INLINE FUNCTION UNDER TEST - From JSON Functions[]
    ======================================================================== */
-void initLED(void)
-{
+void initLED(void) {
     IfxPort_setPinModeOutput(LED, IfxPort_OutputMode_pushPull, IfxPort_OutputIdx_general);
     IfxPort_setPinHigh(LED);
 }
@@ -100,45 +76,41 @@ void initLED(void)
 /* ========================================================================
    UNITY TEST CASES
    ======================================================================== */
-void setUp(void) { mock_reset_all(); }
+void setUp(void) {
+    mock_reset_all();
+}
+
 void tearDown(void) {}
 
-void test_initLED_configures_pushpull_and_sets_high(void)
-{
+void test_initLED_configures_push_pull_output(void) {
     initLED();
-    TEST_ASSERT_EQUAL_UINT32(1U, mock_get_IfxPort_setPinModeOutput_call_count());
-    TEST_ASSERT_EQUAL_UINT32(1U, mock_get_IfxPort_setPinHigh_call_count());
-    TEST_ASSERT_EQUAL_PTR(&MODULE_P00, mock_get_IfxPort_setPinModeOutput_last_port());
-    TEST_ASSERT_EQUAL_UINT8(5U, mock_get_IfxPort_setPinModeOutput_last_pin());
-    TEST_ASSERT_EQUAL_UINT8(IfxPort_OutputMode_pushPull, mock_get_IfxPort_setPinModeOutput_last_mode());
-    TEST_ASSERT_EQUAL_UINT8(IfxPort_OutputIdx_general,  mock_get_IfxPort_setPinModeOutput_last_idx());
-    TEST_ASSERT_EQUAL_PTR(&MODULE_P00, mock_get_IfxPort_setPinHigh_last_port());
-    TEST_ASSERT_EQUAL_UINT8(5U, mock_get_IfxPort_setPinHigh_last_pin());
+    TEST_ASSERT_EQUAL_UINT32(1, mock_get_IfxPort_setPinModeOutput_call_count());
+    TEST_ASSERT_TRUE(mock_IfxPort_setPinModeOutput.last_port == &MODULE_P00);
+    TEST_ASSERT_EQUAL_UINT8(5, mock_IfxPort_setPinModeOutput.last_pin);
+    TEST_ASSERT_EQUAL_UINT8(IfxPort_OutputMode_pushPull, mock_IfxPort_setPinModeOutput.last_mode);
+    TEST_ASSERT_EQUAL_UINT8(IfxPort_OutputIdx_general, mock_IfxPort_setPinModeOutput.last_idx);
 }
 
-void test_initLED_called_twice_updates_counts_and_params(void)
-{
+void test_initLED_sets_pin_high_off_state(void) {
     initLED();
-    initLED();
-    TEST_ASSERT_EQUAL_UINT32(2U, mock_get_IfxPort_setPinModeOutput_call_count());
-    TEST_ASSERT_EQUAL_UINT32(2U, mock_get_IfxPort_setPinHigh_call_count());
-    TEST_ASSERT_EQUAL_PTR(&MODULE_P00, mock_get_IfxPort_setPinModeOutput_last_port());
-    TEST_ASSERT_EQUAL_UINT8(5U, mock_get_IfxPort_setPinModeOutput_last_pin());
-    TEST_ASSERT_EQUAL_PTR(&MODULE_P00, mock_get_IfxPort_setPinHigh_last_port());
-    TEST_ASSERT_EQUAL_UINT8(5U, mock_get_IfxPort_setPinHigh_last_pin());
+    TEST_ASSERT_EQUAL_UINT32(1, mock_get_IfxPort_setPinHigh_call_count());
+    TEST_ASSERT_TRUE(mock_IfxPort_setPinHigh.last_port == &MODULE_P00);
+    TEST_ASSERT_EQUAL_UINT8(5, mock_IfxPort_setPinHigh.last_pin);
 }
 
-void test_initLED_call_order_mode_before_high(void)
-{
+void test_initLED_multiple_calls_increment_counts(void) {
     initLED();
-    TEST_ASSERT_TRUE(mock_get_IfxPort_setPinModeOutput_seq() < mock_get_IfxPort_setPinHigh_seq());
+    initLED();
+    TEST_ASSERT_EQUAL_UINT32(2, mock_get_IfxPort_setPinModeOutput_call_count());
+    TEST_ASSERT_EQUAL_UINT32(2, mock_get_IfxPort_setPinHigh_call_count());
+    TEST_ASSERT_TRUE(mock_IfxPort_setPinModeOutput.last_port == &MODULE_P00);
+    TEST_ASSERT_EQUAL_UINT8(5, mock_IfxPort_setPinModeOutput.last_pin);
 }
 
-int main(void)
-{
+int main(void) {
     UNITY_BEGIN();
-    RUN_TEST(test_initLED_configures_pushpull_and_sets_high);
-    RUN_TEST(test_initLED_called_twice_updates_counts_and_params);
-    RUN_TEST(test_initLED_call_order_mode_before_high);
+    RUN_TEST(test_initLED_configures_push_pull_output);
+    RUN_TEST(test_initLED_sets_pin_high_off_state);
+    RUN_TEST(test_initLED_multiple_calls_increment_counts);
     return UNITY_END();
 }

@@ -5,8 +5,8 @@
 #include "unity.h"
 #include "mocks.h"
 
-void test_core0_main_invokes_startup_sequence_and_blink_loop(void);
-void test_core0_main_watchdog_password_zero(void);
-void test_core0_main_called_twice_accumulates_blinks(void);
+void test_core0_main_initialization_and_watchdog_handling(void);
+void test_core0_main_emits_and_waits_cpu_sync_event(void);
+void test_core0_main_calls_blinkLED_expected_times(void);
 
 #endif

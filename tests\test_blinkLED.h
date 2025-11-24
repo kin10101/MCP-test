@@ -5,8 +5,8 @@
 #include "unity.h"
 #include "mocks.h"
 
-void test_blinkLED_toggles_and_waits_500ms(void);
-void test_blinkLED_boundary_450ms_ticks(void);
-void test_blinkLED_exception_zero_ticks(void);
+void test_blinkLED_toggles_pin_and_waits_500ms(void);
+void test_blinkLED_waits_zero_ticks_when_converter_returns_zero(void);
+void test_blinkLED_uses_converted_ticks_value(void);
 
 #endif
