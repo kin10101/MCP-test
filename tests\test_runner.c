@@ -17,15 +17,15 @@ void tearDown(void) {
 int main(void) {
     UNITY_BEGIN();
     
-    RUN_TEST(test_initLED_configures_push_pull_and_sets_high);
-    RUN_TEST(test_initLED_called_twice_accumulates_calls);
-    RUN_TEST(test_initLED_pin_and_mode_values_are_correct_each_call);
-    RUN_TEST(test_blinkLED_toggles_and_waits_500ms);
-    RUN_TEST(test_blinkLED_multiple_calls_with_variable_ticks);
-    RUN_TEST(test_blinkLED_zero_ticks_still_calls_wait);
-    RUN_TEST(test_core0_main_happy_path_calls_expected_sequences);
-    RUN_TEST(test_core0_main_boundary_zero_loop_limit_runs_no_blinks);
-    RUN_TEST(test_core0_main_error_password_zero_still_disables_watchdogs);
+    RUN_TEST(test_initLED_calls_gpio_config_and_high);
+    RUN_TEST(test_initLED_sets_pushpull_and_general_idx_on_LED_portpin);
+    RUN_TEST(test_initLED_sets_LED_pin_high);
+    RUN_TEST(test_blinkLED_toggles_pin_and_waits_converted_ticks);
+    RUN_TEST(test_blinkLED_handles_zero_ticks_boundary);
+    RUN_TEST(test_blinkLED_handles_nonstandard_ticks_boundary);
+    RUN_TEST(test_core0_main_disables_watchdogs_and_enables_interrupts);
+    RUN_TEST(test_core0_main_emits_and_waits_for_sync_event);
+    RUN_TEST(test_core0_main_initializes_and_blinks_led_three_times);
     
     return UNITY_END();
 }

@@ -20,7 +20,7 @@ void core0_main(void) {
     IfxCpu_emitEvent(&g_cpuSyncEvent);
     IfxCpu_waitEvent(&g_cpuSyncEvent, 1);
     
-    /* Execute project-specific initialization */
+    /* Project initialization */
     initLED();
     
     /* Infinite loop */

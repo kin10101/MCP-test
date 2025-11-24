@@ -5,8 +5,8 @@
 #include "unity.h"
 #include "mocks.h"
 
-void test_core0_main_happy_path_calls_expected_sequences(void);
-void test_core0_main_boundary_zero_loop_limit_runs_no_blinks(void);
-void test_core0_main_error_password_zero_still_disables_watchdogs(void);
+void test_core0_main_disables_watchdogs_and_enables_interrupts(void);
+void test_core0_main_emits_and_waits_for_sync_event(void);
+void test_core0_main_initializes_and_blinks_led_three_times(void);
 
 #endif

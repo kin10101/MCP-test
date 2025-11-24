@@ -5,8 +5,8 @@
 #include "unity.h"
 #include "mocks.h"
 
-void test_initLED_configures_push_pull_and_sets_high(void);
-void test_initLED_called_twice_accumulates_calls(void);
-void test_initLED_pin_and_mode_values_are_correct_each_call(void);
+void test_initLED_calls_gpio_config_and_high(void);
+void test_initLED_sets_pushpull_and_general_idx_on_LED_portpin(void);
+void test_initLED_sets_LED_pin_high(void);
 
 #endif
